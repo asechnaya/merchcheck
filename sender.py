@@ -12,8 +12,8 @@ from config import SMTP_SERVER, SMTP_PORT, SMTP_USERNAME, SMTP_PASSWORD
 
 TXT_SAVE_TEMPLATE = '{}, Inv_id: {}, Summ: {}; OutSumCurrency: {},Date: {}\n'
 
-EMAIL_TO = ["amakarovskaya@robokassa.ru"] #, "sts@robokassa.ru"
-EMAIL_FROM = "robot@robokassa.ru"
+EMAIL_TO = ["amakarovskaya@например.ru"] 
+EMAIL_FROM = "robot@например.ru"
 EMAIL_SUBJECT = "Test notification from ROBOKASSA: "
 filepath = u"D:\merchwebsites\monday.txt"
 filename = "monday.txt"
