@@ -2,20 +2,23 @@
 import smtplib
 import os
 from datetime import date, datetime
-from email.mime.base import MIMEBase
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
-from email import encoders
+from email.mime.application import MIMEApplication
 
 from config import SMTP_SERVER, SMTP_PORT, SMTP_USERNAME, SMTP_PASSWORD
 
+EMAIL_TO = ["юзер@ух.ru"]
+EMAIL_FROM = "robot@ух.ru"
+EMAIL_SUBJECT = "Test notification from УХ: "
 
-TXT_SAVE_TEMPLATE = '{}, Inv_id: {}, Summ: {}; OutSumCurrency: {},Date: {}\n'
+# open the file to be sent
+dir_path = u"D:\merchwebsites"
+filenothing = r"monday_empty.txt"
+fileerr = r"monday_err.txt"
 
-EMAIL_TO = ["amakarovskaya@например.ru"] 
-EMAIL_FROM = "robot@например.ru"
-EMAIL_SUBJECT = "Test notification from ROBOKASSA: "
-filepath = u"D:\merchwebsites\monday.txt"
+files = [filenothing, fileerr]
+
 filename = "monday.txt"
 
 DATE_FORMAT = "%d/%m/%Y"
@@ -36,29 +39,14 @@ def send_email():
     # attach the body with the msg instance
     msg.attach(MIMEText(DATA_EMAIL, 'plain'))
 
-    # open the file to be sent
-    attachment = open('D:\merchwebsites\monday_empty.txt', "rb")
 
-    # instance of MIMEBase and named as p
-    p = MIMEBase('application', 'octet-stream')
-
-    # To change the payload into encoded form
-    p.set_payload((attachment).read())
-
-    # encode into base64
-    encoders.encode_base64(p)
-
-    p.add_header('Content-Disposition', "attachment; filename= %s" % filename)
-
-    # attach the instance 'p' to instance 'msg'
-    msg.attach(p)
-
-
-
-
+    for f in files:  # add files to the message
+        file_path = os.path.join(dir_path, f)
+        attachment = MIMEApplication(open(file_path, "rb").read(), _subtype="txt")
+        attachment.add_header('Content-Disposition', 'attachment', filename=f)
+        msg.attach(attachment)
 
     mail = smtplib.SMTP(SMTP_SERVER, SMTP_PORT)
-
     mail.starttls()
     mail.login(SMTP_USERNAME, SMTP_PASSWORD)
     mail.sendmail(EMAIL_FROM, EMAIL_TO, msg.as_string())
